@@ -3,7 +3,7 @@ const router = express.Router();
 
 // Halaman Utama / Biodata Kelompok
 router.get('/', (req, res) => {
-    res.render('index', { title: 'Home - Biodata Kelompok', namaKelompok:"Kelompok20", user: req.user || null });
+    res.render('index', { title: 'Home - Biodata Kelompok', namaKelompok:"Kelompok20" });
 });
 
 module.exports = router;

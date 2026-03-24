@@ -5,7 +5,22 @@
     <title>Biodata Kelompok</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-10">
+<body class="bg-gray-100 p-10 relative">
+
+    <div class="absolute top-5 right-5 flex items-center space-x-4">
+        <% if (!user) { %>
+            <a href="/auth/google" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 rounded shadow">
+                Login with Google
+            </a>
+        <% } else { %> 
+            <div class="flex items-center space-x-3 bg-white px-4 py-2 rounded-full shadow-sm">
+                <span class="font-semibold text-gray-500 text-sm"><%= user.displayName %></span>
+                <a href="/logout" class="bg-red-500 hover:bg-red-600 text-gray-700 px-3 py-2 rounded shadow">
+                    Logout
+                </a>
+            </div>
+        <% } %>
+    </div>
 
     <h1 class="text-3xl font-bold text-center mb-8">
         Selamat Datang di <%= namaKelompok %>
@@ -48,7 +63,6 @@
 
         <% if (!user) { %>
             <p class="text-red-500 mb-4">Anda belum login.</p>
-            <a href="/auth/google" class="bg-blue-500 text-white px-4 py-2 rounded">Login with Google</a>
         <% } else { %>
             <p class="text-green-600 mb-4">Halo, <%= user.displayName %>!</p>
             
@@ -58,8 +72,6 @@
                     <button class="mt-2 bg-yellow-500 text-white px-3 py-1 rounded">Ubah Tampilan</button>
                 </div>
             <% } %>
-
-            <a href="/logout" class="block mt-4 text-sm text-gray-500 underline">Logout</a>
         <% } %>
     </div>
 

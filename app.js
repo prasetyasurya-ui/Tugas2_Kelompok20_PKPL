@@ -1,7 +1,82 @@
+require('dotenv').config();
+const {google} = require('googleapis');
+const session = require('express-session');
 const express = require('express')
 const app = express()
 const path = require('path')
 const webRoutes = require('./routes/web');
+
+// Setup session
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false
+}));
+
+// Setup Google oauth
+const oauth2Client = new google.auth.OAuth2(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    'http://localhost:3000/auth/google/callback'
+)
+
+const scopes = [
+    'https://www.googleapis.com/auth/userinfo.email',
+    'https://www.googleapis.com/auth/userinfo.profile'
+]
+
+const authorizationUrl = oauth2Client.generateAuthUrl({
+    access_type: 'offline',
+    scope: scopes,
+    include_granted_scopes: true,
+})
+
+// Google login route
+app.get('/auth/google', (req, res) => {
+    res.redirect(authorizationUrl);
+})
+
+// Google callback login route
+app.get('/auth/google/callback', async (req, res) => {
+    const {code} = req.query;
+
+    const {tokens} = await oauth2Client.getToken(code);
+    oauth2Client.setCredentials(tokens);
+
+    const oauth2 = google.oauth2({
+        auth: oauth2Client,
+        version: 'v2',
+    })
+
+    const {data} = await oauth2.userinfo.get()
+
+    if (!data) {
+        return res.status(401).send("Gagal mendapatkan data dari Google")
+    }
+
+    // TODO: Authorization
+
+    req.session.user= {
+        displayName: data.name,
+        email: data.email,
+        picture: data.picture,
+    }
+
+    res.redirect('/')
+})
+
+// Logout route
+app.get('/logout', (req, res) => {
+    req.session.destroy(() => {
+        res.redirect('/');
+    });
+});
+
+// Middleware
+app.use((req, res, next) => {
+    res.locals.user = req.session.user || null;
+    next();
+});
 
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
