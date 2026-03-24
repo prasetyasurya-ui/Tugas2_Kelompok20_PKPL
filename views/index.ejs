@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Biodata Kelompok</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-10">
+
+    <h1 class="text-3xl font-bold text-center mb-8">
+        Selamat Datang di <%= namaKelompok %>
+    </h1>
+
+    <div class="bg-white p-6 rounded-lg shadow-md max-w-md mx-auto">
+        <h2 class="text-xl font-bold mb-4">Biodata Anggota:</h2>
+        <ul>
+            <li class="mb-2">
+                <div class="flex flex-col">
+                    <span class="font-bold">Mirza Radithya Ramadhana </span>
+                    <span>NPM: 2406405563</span>
+                    <span>Jurusan: Ilmu Komputer</span>
+                </div>
+            </li>
+            <li class="mb-2">
+                <div class="flex flex-col">
+                    <span class="font-bold">Mafaza Ananda Rahman</span>
+                    <span>NPM: 2406401306</span>
+                    <span>Jurusan: Sistem Informasi</span>
+                </div>
+            </li>
+            <li class="mb-2">
+                <div class="flex flex-col">
+                    <span class="font-bold">Prasetya Surya Syahputra</span>
+                    <span>NPM: 2406398381</span>
+                    <span>Jurusan: Ilmu Komputer</span>
+                </div>
+            </li>
+            <li class="mb-2">
+                <div class="flex flex-col">
+                    <span class="font-bold">William Jonnatan</span>
+                    <span>NPM: 2406429020</span>
+                    <span>Jurusan: Ilmu Komputer</span>
+                </div>
+            </li>
+        </ul>
+
+        <hr class="my-6">
+
+        <% if (!user) { %>
+            <p class="text-red-500 mb-4">Anda belum login.</p>
+            <a href="/auth/google" class="bg-blue-500 text-white px-4 py-2 rounded">Login with Google</a>
+        <% } else { %>
+            <p class="text-green-600 mb-4">Halo, <%= user.displayName %>!</p>
+            
+            <% if (user.isMember) { %>
+                <div class="p-4 bg-yellow-100 border-l-4 border-yellow-500">
+                    <p class="font-bold text-yellow-700">Fitur Admin Aktif:</p>
+                    <button class="mt-2 bg-yellow-500 text-white px-3 py-1 rounded">Ubah Tampilan</button>
+                </div>
+            <% } %>
+
+            <a href="/logout" class="block mt-4 text-sm text-gray-500 underline">Logout</a>
+        <% } %>
+    </div>
+
+</body>
+</html>
