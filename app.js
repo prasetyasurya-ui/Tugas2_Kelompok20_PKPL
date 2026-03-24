@@ -38,9 +38,10 @@ app.get('/auth/google', (req, res) => {
 
 // Google callback login route
 app.get('/auth/google/callback', async (req, res) => {
-    const {code} = req.query
-    const {token} = await oauth2Client.getToken(code);
-    oauth2Client.setCredentials(token);
+    const {code} = req.query;
+
+    const {tokens} = await oauth2Client.getToken(code);
+    oauth2Client.setCredentials(tokens);
 
     const oauth2 = google.oauth2({
         auth: oauth2Client,
