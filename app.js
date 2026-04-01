@@ -45,31 +45,38 @@ app.get('/auth/google', (req, res) => {
 
 // Google callback login route
 app.get('/auth/google/callback', async (req, res) => {
-    const {code} = req.query;
+    try {
+        const {code} = req.query;
 
-    const {tokens} = await oauth2Client.getToken(code);
-    oauth2Client.setCredentials(tokens);
+        const {tokens} = await oauth2Client.getToken(code);
+        oauth2Client.setCredentials(tokens);
 
-    const oauth2 = google.oauth2({
-        auth: oauth2Client,
-        version: 'v2',
-    })
+        const oauth2 = google.oauth2({
+            auth: oauth2Client,
+            version: 'v2',
+        });
 
-    const {data} = await oauth2.userinfo.get()
+        const {data} = await oauth2.userinfo.get();
 
-    if (!data) {
-        return res.status(401).send("Gagal mendapatkan data dari Google")
+        if (!data) {
+            return res.status(401).send("Gagal mendapatkan data dari Google");
+        }
+
+        const email = (data.email || '').toLocaleLowerCase();
+        const isWhitelisted = WHITELIST_EMAILS.includes(email);
+
+        req.session.user= {
+            displayName: data.name,
+            email: data.email,
+            picture: data.picture,
+            isWhitelisted
+        }
+
+        res.redirect('/');
+    } catch (error) {
+        console.error('Google OAuth Error:', error);
+        res.status(500).send('Terjadi error saat login Google');
     }
-
-    // TODO: Authorization
-
-    req.session.user= {
-        displayName: data.name,
-        email: data.email,
-        picture: data.picture,
-    }
-
-    res.redirect('/')
 })
 
 // Logout route
@@ -90,5 +97,6 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', webRoutes);
+app.use('/api', apiRoutes)
 
 app.listen(3000, () => console.log("Server jalan di http://localhost:3000"));
