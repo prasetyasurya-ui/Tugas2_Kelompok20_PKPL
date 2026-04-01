@@ -5,7 +5,7 @@
     <title>Biodata Kelompok</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 p-10 relative">
+<body class="<%= theme.background %> <%= theme.font %> p-10 relative">
 
     <div class="absolute top-5 right-5 flex items-center space-x-4">
         <% if (!user) { %>
@@ -72,10 +72,32 @@
                         Anda termasuk whitelist, jadi panel edit ditampilkan.
                     </p>
 
-                    // TODO: implement fitur edit warna/font
-                    <button class="mt-3 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
-                        Panel Edit
-                    </button>
+                    <form id="theme-form" class="mt-4 space-y-3">
+                        <div>
+                            <label for="background" class="block text-sm text-gray-700 mb-1">Warna background</label>
+                            <select id="background" name="background" class="w-full rounded border border-gray-300 px-2 py-1 text-sm">
+                                <option value="bg-gray-100" <%= theme.background === 'bg-gray-100' ? 'selected' : '' %>>Gray</option>
+                                <option value="bg-slate-200" <%= theme.background === 'bg-slate-200' ? 'selected' : '' %>>Slate</option>
+                                <option value="bg-blue-100" <%= theme.background === 'bg-blue-100' ? 'selected' : '' %>>Blue</option>
+                                <option value="bg-green-100" <%= theme.background === 'bg-green-100' ? 'selected' : '' %>>Green</option>
+                                <option value="bg-yellow-100" <%= theme.background === 'bg-yellow-100' ? 'selected' : '' %>>Yellow</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="font" class="block text-sm text-gray-700 mb-1">Jenis font</label>
+                            <select id="font" name="font" class="w-full rounded border border-gray-300 px-2 py-1 text-sm">
+                                <option value="font-sans" <%= theme.font === 'font-sans' ? 'selected' : '' %>>Sans</option>
+                                <option value="font-serif" <%= theme.font === 'font-serif' ? 'selected' : '' %>>Serif</option>
+                                <option value="font-mono" <%= theme.font === 'font-mono' ? 'selected' : '' %>>Mono</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
+                            Simpan Tema
+                        </button>
+                        <p id="theme-message" class="text-sm"></p>
+                    </form>
                 </div>
             <% } else { %>
                 <div class="p-4 bg-gray-100 border-l-4 border-gray-400 rounded">
@@ -87,6 +109,43 @@
             <% } %>
         <% } %>
     </div>
+
+    <% if (user && user.isWhitelisted) { %>
+    <script>
+        const themeForm = document.getElementById('theme-form');
+        const themeMessage = document.getElementById('theme-message');
+
+        themeForm.addEventListener('submit', async (event) => {
+            event.preventDefault();
+
+            const background = document.getElementById('background').value;
+            const font = document.getElementById('font').value;
+
+            const response = await fetch('/api/theme', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ background, font })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                themeMessage.className = 'text-sm text-red-600';
+                themeMessage.textContent = result.message || 'Gagal menyimpan theme';
+                return;
+            }
+
+            document.body.classList.remove('bg-gray-100', 'bg-slate-200', 'bg-blue-100', 'bg-green-100', 'bg-yellow-100');
+            document.body.classList.remove('font-sans', 'font-serif', 'font-mono');
+            document.body.classList.add(background, font);
+
+            themeMessage.className = 'text-sm text-green-700';
+            themeMessage.textContent = result.message || 'Theme berhasil disimpan';
+        });
+    </script>
+    <% } %>
 
 </body>
 </html>
