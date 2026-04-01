@@ -4,7 +4,10 @@ const session = require('express-session');
 const express = require('express')
 const app = express()
 const path = require('path')
+
 const webRoutes = require('./routes/web');
+const apiRoutes = require('./routes/api');
+const WHITELIST_EMAILS = require('./config/whitelist');
 
 // Setup session
 app.use(session({
