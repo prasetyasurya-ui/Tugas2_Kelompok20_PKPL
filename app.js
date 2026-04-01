@@ -9,6 +9,10 @@ const webRoutes = require('./routes/web');
 const apiRoutes = require('./routes/api');
 const WHITELIST_EMAILS = require('./config/whitelist');
 
+// Middleware body parser
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 // Setup session
 app.use(session({
     secret: process.env.SESSION_SECRET,
