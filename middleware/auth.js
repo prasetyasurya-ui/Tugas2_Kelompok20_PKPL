@@ -1,4 +1,4 @@
-const WHITELIST_EMAILS = require("../confid/whitelist");
+const WHITELIST_EMAILS = require("../config/whitelist");
 
 function requireLogin(req, res, next) {
     if (!req.session.user) {
