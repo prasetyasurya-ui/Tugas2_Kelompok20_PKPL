@@ -65,11 +65,24 @@
             <p class="text-red-500 mb-4">Anda belum login.</p>
         <% } else { %>
             <p class="text-green-600 mb-4">Halo, <%= user.displayName %>!</p>
-            
-            <% if (user.isMember) { %>
-                <div class="p-4 bg-yellow-100 border-l-4 border-yellow-500">
-                    <p class="font-bold text-yellow-700">Fitur Admin Aktif:</p>
-                    <button class="mt-2 bg-yellow-500 text-white px-3 py-1 rounded">Ubah Tampilan</button>
+            <% if (user.isWhitelisted) { %>
+                <div class="p-4 bg-yellow-100 border-l-4 border-yellow-500 rounded">
+                    <p class="font-bold text-yellow-700">Panel Edit Tersedia</p>
+                    <p class="text-sm text-gray-700 mt-1">
+                        Anda termasuk whitelist, jadi panel edit ditampilkan.
+                    </p>
+
+                    // TODO: implement fitur edit warna/font
+                    <button class="mt-3 bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
+                        Panel Edit
+                    </button>
+                </div>
+            <% } else { %>
+                <div class="p-4 bg-gray-100 border-l-4 border-gray-400 rounded">
+                    <p class="font-semibold text-gray-700">Akses edit tidak tersedia</p>
+                    <p class="text-sm text-gray-600 mt-1">
+                        Anda berhasil login, tetapi email Anda tidak ada di whitelist.
+                    </p>
                 </div>
             <% } %>
         <% } %>
