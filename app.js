@@ -8,6 +8,7 @@ const path = require('path')
 const webRoutes = require('./routes/web');
 const apiRoutes = require('./routes/api');
 const WHITELIST_EMAILS = require('./config/whitelist');
+const { getTheme } = require('./config/themeStore');
 
 // Middleware body parser
 app.use(express.json());
@@ -89,6 +90,7 @@ app.get('/logout', (req, res) => {
 // Middleware
 app.use((req, res, next) => {
     res.locals.user = req.session.user || null;
+    res.locals.theme = getTheme();
     next();
 });
 
