@@ -69,7 +69,6 @@ app.get('/auth/google/callback', async (req, res) => {
         req.session.user= {
             displayName: data.name,
             email: data.email,
-            picture: data.picture,
             isWhitelisted
         }
 
