@@ -1,7 +1,7 @@
 const WHITELIST_EMAILS = [
     'mirzaradithyar@gmail.com',
     'rahmanmafaza0@gmail.com',
-    'prasetya.suryai@ui.ac.id',
+    'prasetyas7306@gmail.com ',
     'williamjonnatan31@gmail.com'
 ];
 
